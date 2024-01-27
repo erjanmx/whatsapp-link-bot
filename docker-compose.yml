@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  walink_bot:
+    container_name: walink-bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: node wa-link-bot.js
