@@ -6,6 +6,7 @@ const buildFullPhoneNumber = require('./build-phone-number');
 const buildWhatsAppLink = require('./build-whatsapp-link');
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
+console.log('WhatsApp Link Bot is now running and polling for messages...');
 
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
