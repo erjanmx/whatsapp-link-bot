@@ -1,5 +1,7 @@
 {
+  "main": "wa-link-bot.js",
   "scripts": {
+    "start": "node wa-link-bot.js",
     "test": "jest"
   },
   "dependencies": {
