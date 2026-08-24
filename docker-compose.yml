@@ -6,4 +6,4 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: node wa-link-bot.js
+    command: node index.js
