@@ -1,14 +1,21 @@
 const TelegramBot = require('node-telegram-bot-api');
 const setupBot = require('../bot-setup');
 
-// Create the bot without polling
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
+// Create the bot without polling (only if token exists to prevent cold-boot crashes)
+const token = process.env.TELEGRAM_BOT_TOKEN;
+const bot = token ? new TelegramBot(token) : null;
 
-// Setup bot logic
-setupBot(bot);
+if (bot) {
+  // Setup bot logic
+  setupBot(bot);
+}
 
 module.exports = async (request, response) => {
   try {
+    if (!bot) {
+      return response.status(500).send('ERROR: TELEGRAM_BOT_TOKEN environment variable is missing in Vercel!');
+    }
+
     if (request.method === 'GET') {
       return response.status(200).send('WhatsApp Link Bot is running!');
     }
