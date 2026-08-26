@@ -9,15 +9,33 @@ setupBot(bot);
 
 module.exports = async (request, response) => {
   try {
-    // Vercel parses the JSON body automatically
+    if (request.method === 'GET') {
+      return response.status(200).send('WhatsApp Link Bot is running!');
+    }
+
     const { body } = request;
     
-    // Process the update via the bot
-    if (body) {
+    if (request.method === 'POST' && body) {
+      // Intercept bot.sendMessage to wait for it to finish before ending the Vercel function
+      const promises = [];
+      const originalSendMessage = bot.sendMessage.bind(bot);
+      
+      bot.sendMessage = (...args) => {
+        const p = originalSendMessage(...args);
+        promises.push(p);
+        return p;
+      };
+
+      // Process the update
       bot.processUpdate(body);
+
+      // Wait for all messages to be sent
+      await Promise.all(promises);
+      
+      // Restore the original method
+      bot.sendMessage = originalSendMessage;
     }
     
-    // Respond with a 200 OK so Telegram knows we received the message
     response.status(200).send('OK');
   } catch (error) {
     console.error('Error processing update:', error);
